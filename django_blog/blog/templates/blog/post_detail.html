@@ -1,0 +1,57 @@
+{%extends "blog/base.html" %} {% block content%}
+<article class="media content-section">
+  <img
+    src="{{object.author.profile.image.url}}"
+    class="rounded-circle article-img"
+  />
+  <div class="media-body">
+    <div class="article-metadata">
+      <a class="mr-2" href="{% url 'user-posts' post.author.username%}"
+        >{{ object.author }}</a
+      >
+      <small class="text-muted">{{ object.date_posted|date:"F d, Y" }}</small>
+      {% if object.author == user%}
+      <div>
+        <a
+          class="btn btn-secondary btn-sm mt-1 mb-1"
+          href="{% url 'post-update' object.id%}"
+          >Update</a
+        >
+        <a
+          class="btn btn-danger btn-sm mt-1 mb-1"
+          href="{% url 'post-delete' object.id%}"
+          >Delete</a
+        >
+      </div>
+      {%endif%}
+    </div>
+    <h2 class="article-title">{{ object.title }}</h2>
+    {% if object.image %}
+      <img src="{{ object.image.url }}" height="50%" width="50%" > 
+    {% endif %}
+      <p class="article-content">{{ object.content|safe }}</p>
+
+  
+  <hr>
+    <div class="comment">
+      <h5>Comments...</h5>
+      {% if not post.comments.all %}
+        No comments yet... <a href="{% url 'add_comment' post.pk %}">Add One</a>
+      {% else %}
+      <a href="{% url 'add_comment' post.pk %}" ><button type="button"  class="btn btn-dark" >Add Comment</button></a>
+      
+      <br>
+        {% for comment in post.comments.all %}
+          <strong>
+            {{ comment.name }} - on
+            {{ comment.date }}
+            <br>
+          </strong>
+          {{ comment.body }}
+          <br><br>
+        {% endfor %}
+      {% endif %}
+    </div>
+  </div> 
+</article>
+{% endblock%}
